@@ -326,7 +326,7 @@ const dich_vu = http.createServer((req, res) => {
                 }).catch(err=>{
                     console.log(err);
                     ket_qua.Noi_dung = false;
-                    let m = "Hello";
+                  
                     res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
                     res.end(JSON.stringify(ket_qua))
                 })
