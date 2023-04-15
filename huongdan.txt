@@ -1,0 +1,49 @@
+
+Server Data (Node JS) -> Cung cấp Dữ liệu (string JSON) -> Địa chỉ API 
+
+Ứng dụng WEB, WIN Form ... 
+	Request -> API Gọi về Server -> Server Reponse cho Client
+	Method 
+		GET: Lấy dữ liệu
+		POST: Client truyền tham số đính kèm (Thêm, Sửa, Xóa)
+		...
+
+
+---------------- Các bước xây dựng Services--------------------------------------------------
+
+b1 - Tạo thư mục he_phuc_vu
+b2 - Tạo tập tin (package.json) lưu trữ thông tin của ứng dụng + các gói module 
+	Mở cửa sổ Terminal: npm init -y
+
+	* Cài đặt gói module: npm i <module name> --s 
+	* Gởi gói cài đặt (module): npm uninstall <module name>
+	* Cài đặt các gói module trong tập tin package.json: npm i
+    ***** Cài đặt gói module: npm i mongodb --s 
+b3 - Tạo tập tin: dich_vu.js
+
+b4 - Thực thi Dịch vụ (trang 16 -17)
+b5 - Test Server (API) -> Cài đặt Rest Client (extensions)
+		- Tạo tập tin testAPI.rest
+
+POST
+	let noi_dung_nhan='';
+            req.on("data",(data)=>{
+                noi_dung_nhan+= data
+            })
+	if(url=="/ThemUser"){
+                req.on("end",()=>{
+                    let user=JSON.parse(noi_dung_nhan);
+                    let strJSON=fs.readFileSync("./data/Nguoi_dung.json","utf8");
+                    let arrUsers=JSON.parse(strJSON);
+                    arrUsers.push(user);
+                    fs.writeFileSync("./data/Nguoi_dung.json",JSON.stringify(arrUsers),"utf8");
+                    res.end(JSON.stringify({"ket_qua":true}))
+                })
+            }
+
+	
+
+
+
+
+	

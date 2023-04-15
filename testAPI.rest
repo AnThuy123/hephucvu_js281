@@ -1,0 +1,68 @@
+GET http://localhost:5500/dsTivi
+###
+GET http://localhost:8080/dsDienthoai
+###
+GET http://localhost:8080/TIVI_1.png
+###
+POST http://localhost:8080/ThemNguoidung
+Content-Type: application/json
+
+{
+    "Ho_ten": "Nguyễn Anh Tuấn",
+    "Ma_so": "QL_20",
+    "Ten_Dang_nhap": "ntuan",
+    "Mat_khau": "tuan010542",
+    "Nhom_Nguoi_dung": {
+        "Ten": "Nhân viên Quản lý",
+        "Ma_so": "NHAN_VIEN_QUAN_LY"
+    }
+}
+###
+POST http://localhost:8080/SuaNguoidung
+Content-Type: application/json
+
+{
+    "Ho_ten": "Nguyễn Anh Tài",
+    "Ma_so": "QL_20",
+    "Ten_Dang_nhap": "ntai",
+    "Mat_khau": "tai010542"
+}
+###
+POST http://localhost:8080/XoaNguoidung
+Content-Type: application/json
+
+{
+    "Ma_so": "QL_20"
+}
+
+###
+
+GET http://localhost:8080/layMotDienthoai
+Content-Type: application/json
+
+
+{
+    "Ma_so": "ANDROID_3"
+}
+
+
+###
+POST http://localhost:8080/SMS
+
+
+
+
+###
+POST http://localhost:8080/Lienhe
+Content-Type: application/json
+
+{
+    "tieude" : "Test mail",
+    "noidung" : "Hello Nathan with javascript",
+    "email" : "trongnhan8150@gmail.com"
+}
+
+
+###
+GET Http://localhost:8080/dsTivi?Ma_so=TIVI_1
+
