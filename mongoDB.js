@@ -1,7 +1,7 @@
 const mong_db = require("mongodb");
 const MongoClient = mong_db.MongoClient;
-const uri = "mongodb+srv://danthuy:nddthuy12345@cluster0.tjymprh.mongodb.net/?retryWrites=true&w=majority";
-const dbName = "js281";
+const uri = "mongodb+srv://danthuy178:danthuy170883@quanlythuvien.se61kau.mongodb.net/";
+const dbName = "quanlythuvien";
 
 class mongoDB{
     getAll(collection_name,filter={}){

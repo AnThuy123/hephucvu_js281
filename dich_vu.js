@@ -29,45 +29,30 @@ const dich_vu = http.createServer((req, res) => {
     if (method == "GET") {
         let param={}
         param = URI.parse(url, true);
+        console.log(param);
         url=param.pathname;
         let query=param.query
-        if (url == "/dsTivi") {
+        if (url == "/dsThuvien") {
             if(Object.keys(query).length==0) {
-                db.getAll("tivi").then((result) => {
+                db.getAll("thuvien").then((result) => {
                     ket_qua = JSON.stringify(result);
+                    res.setHeader("Content-Type", "application/json; charset=utf-8");
                     res.end(ket_qua);
                 }).catch((err) => console.log(err));
             } else {
-                console.log(param.query.Ma_so);
+                console.log(param.query._id);
                 let filter = {
-                    "Ma_so" : param.query.Ma_so
+                    "_id" : param.query._id
                 }
                 console.log(filter);
-                db.getOne("tivi",filter).then(result => {
+                db.getOne("thuvien",filter).then(result => {
                     ket_qua = JSON.stringify(result);
+                    res.setHeader("Content-Type", "application/json; charset=utf-8");
                     res.end(ket_qua);
                 }).catch((err) => console.log(err));
             }
         } 
-        else if (url == "/dsMathang") {
-            if(!query.Ma_so) {
-                db.getAll("food").then((result) => {
-                    ket_qua = JSON.stringify(result);
-                    res.end(ket_qua);
-                }).catch((err) => console.log(err));
-
-            } else {
-                console.log(query.Ma_so);
-                let filter = {
-                    "Ma_so": param.query.Ma_so
-                }
-                console.log(filter);
-                db.getOne("food", filter).then(result => {
-                    ket_qua = JSON.stringify(result);
-                    res.end(ket_qua);
-                }).catch((err) => console.log(err));
-            }
-        }
+        
         else if (url == "/dsDienthoai") {
             if(!query.Ma_so) {
                 db.getAll("mobile").then((result) => {
@@ -86,42 +71,7 @@ const dich_vu = http.createServer((req, res) => {
                     res.end(ket_qua);
                 }).catch((err) => console.log(err));
             }
-        } else if (url == "/Cuahang") {
-            if(!query.Ma_so) {
-                db.getAll("store").then((result) => {
-                    ket_qua = JSON.stringify(result);
-                    res.end(ket_qua);
-                }).catch((err) => console.log(err));
-
-            } else {
-                console.log(query.Ma_so);
-                let filter = {
-                    "Ma_so": param.query.Ma_so
-                }
-                console.log(filter);
-                db.getOne("store", filter).then(result => {
-                    ket_qua = JSON.stringify(result);
-                    res.end(ket_qua);
-                }).catch((err) => console.log(err));
-            }
-        } else if (url == "/dsHocsinh") {
-            if(!query.Ma_so) {
-                db.getAll("student").then((result) => {
-                    ket_qua = JSON.stringify(result);
-                    res.end(ket_qua);
-                }).catch((err) => console.log(err));
-
-            } else {
-                console.log(query.Ma_so);
-                let filter = {
-                    "Ma_so": param.query.Ma_so
-                }
-                console.log(filter);
-                db.getOne("student", filter).then(result => {
-                    ket_qua = JSON.stringify(result);
-                    res.end(ket_qua);
-                }).catch((err) => console.log(err));
-            }
+       
         } else if (url.match("\.png$")) {
             let imagePath = `images/${url}`;
             if (!fs.existsSync(imagePath)) {
@@ -144,14 +94,14 @@ const dich_vu = http.createServer((req, res) => {
             
         })
         // Xử lý Tham số, trả kết quả về cho client
-        if(url=="/ThemNguoidung"){
+        if(url=="/ThemSach"){
             req.on("end",()=>{
                db.insertOne("user",JSON.parse(noi_dung_nhan)).then((result) => {
                 ket_qua = JSON.stringify(result);
                 res.end(ket_qua)
                }).catch(err => console.log(err));
             })
-        }else if(url=="/SuaNguoidung"){
+        }else if(url=="/SuaSach"){
             req.on("end",()=>{
                 
                 let nguoiDung=JSON.parse(noi_dung_nhan);
@@ -171,7 +121,7 @@ const dich_vu = http.createServer((req, res) => {
                 }).catch(err => console.log(err));
 
             })
-        }else if(url=="/XoaNguoidung"){
+        }else if(url=="/XoaSach"){
             req.on("end",()=>{
                 let nguoiDung=JSON.parse(noi_dung_nhan);
                 let filter = {
@@ -228,111 +178,7 @@ const dich_vu = http.createServer((req, res) => {
                     res.end(JSON.stringify(ket_qua));
                 })	
             })
-        }else if (url == "/Lienhe") {
-            req.on("end", function () {
-                let thongTin = JSON.parse(noi_dung_nhan);
-                let Ket_qua = { "Noi_dung": true };
-                let from = `ltv.javascript@gmail.com`;
-                let to = thongTin.email;
-                let subject = thongTin.tieude;
-                let body = thongTin.noidung
-                sendMail.Goi_Thu_Lien_he(from, to, subject, body).then(result => {
-                    console.log(result)
-                    res.end(JSON.stringify(Ket_qua));
-                }).catch(err => {
-                    console.log(err);
-                    Ket_qua.Noi_dung = false;
-                    res.end(JSON.stringify(Ket_qua));
-                })
-            })
-        } else if (url == "/Dathang") {
-            req.on("end", () => {
-                let dsDathang = JSON.parse(noi_dung_nhan);
-                let ket_qua = { "Noi_dung": [] };
-                dsDathang.forEach(item => {
-                    let filter = {
-                        "Ma_so": item.key
-                    }
-                    let collectionName = (item.manhom == 1) ? "tivi" : (item.manhom == 2) ? "food" : "mobile";
-                    db.getOne(collectionName, filter).then(result => {
-                        item.dathang.So_Phieu_Dat = result.Danh_sach_Phieu_Dat.length + 1;
-                        result.Danh_sach_Phieu_Dat.push(item.dathang);
-                        // Update
-                        let capnhat = {
-                            $set: { Danh_sach_Phieu_Dat: result.Danh_sach_Phieu_Dat }
-                        }
-                        let obj = {
-                            "Ma_so": result.Ma_so,
-                            "Update": true
-                        }
-                        db.updateOne(collectionName, filter, capnhat).then(result => {
-                            if (result.modifiedCount == 0) {
-                                obj.Update = false
-                            }
-                            ket_qua.Noi_dung.push(obj);
-                            console.log(ket_qua.Noi_dung)
-                            if (ket_qua.Noi_dung.length == dsDathang.length) {
-                                res.end(JSON.stringify(ket_qua));
-                            }
-                        }).catch(err => {
-                            console.log(err)
-                        })
-                    }).catch(err => {
-                        console.log(err);
-                    })
-
-                })
-            })
-        } else if (url == "/ThemDienthoai") {
-            req.on('end', function () {
-                let mobile = JSON.parse(noi_dung_nhan);
-                let ket_qua = { "Noi_dung": true };
-                db.insertOne("mobile", mobile).then(result => {
-                    console.log(result);
-                    res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
-                    res.end(JSON.stringify(ket_qua));
-                }).catch(err => {
-                    console.log(err);
-                    ket_qua.Noi_dung = false;
-                    res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
-                    res.end(JSON.stringify(ket_qua));
-                })
-            })
         }
-        else if (url == "/SuaDienthoai") {
-            req.on('end', function () {
-                let mobile = JSON.parse(noi_dung_nhan);
-                let ket_qua = { "Noi_dung": true };
-                db.updateOne("mobile",mobile.condition,mobile.update).then(result=>{
-                    console.log(result);
-                    res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
-                    res.end(JSON.stringify(ket_qua));
-                }).catch(err=>{
-                    console.log(err);
-                    ket_qua.Noi_dung = false;
-                    res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
-                    res.end(JSON.stringify(ket_qua)) 
-                })
-            })
-        }
-        else if (url == "/XoaDienthoai") {
-            req.on('end', function () {
-                let mobile = JSON.parse(noi_dung_nhan);
-                let ket_qua = { "Noi_dung": true };
-                db.deleteOne("mobile",mobile).then(result=>{
-                    console.log(result);
-                    res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
-                    res.end(JSON.stringify(ket_qua));
-                }).catch(err=>{
-                    console.log(err);
-                    ket_qua.Noi_dung = false;
-                  
-                    res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
-                    res.end(JSON.stringify(ket_qua))
-                })
-                
-            })
-
         }
         //Thêm hình ảnh
         else if (url == "/ImagesDienthoai") {
@@ -364,9 +210,7 @@ const dich_vu = http.createServer((req, res) => {
                 
             })
 
-        }
-
-
+        
 
     } else {
         res.end(ket_qua);

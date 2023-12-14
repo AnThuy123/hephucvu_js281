@@ -37,12 +37,12 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/layMotDienthoai
+GET http://localhost:5500/dsThuvien
 Content-Type: application/json
 
 
 {
-    "Ma_so": "ANDROID_3"
+    "_id": "657ac12fd1c8bd9f72efd07d"
 }
 
 
